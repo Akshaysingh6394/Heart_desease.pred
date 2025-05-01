@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Detector</title>
+    <style>
+        :root {
+    --primary: #1e88e5;
+    --primary-dark: #1565c0;
+    --primary-light: #64b5f6;
+    --secondary: #e91e63;
+    --secondary-dark: #c2185b;
+    --secondary-light: #f48fb1;
+    --accent: #ff5722;
+    --success: #4caf50;
+    --success-light: #a5d6a7;
+    --warning: #ff9800;
+    --warning-light: #ffe0b2;
+    --error: #f44336;
+    --error-light: #ef9a9a;
+    --text-dark: #333333;
+    --text-medium: #555555;
+    --text-light: #757575;
+    --background: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-radius: 8px;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--text-dark);
+    line-height: 1.6;
+    padding: var(--spacing-md);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.logo {
+    margin-bottom: var(--spacing-md);
+}
+
+h1 {
+    color: var(--primary-dark);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    display: inline-block;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--secondary);
+    border-radius: 2px;
+}
+
+.tagline {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: var(--spacing-lg);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+    .content {
+        flex-direction: row;
+    }
+}
+
+.form-section {
+    flex: 1;
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.results-section {
+    flex: 1;
+    animation: slideInRight 0.8s ease-out;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.card-title {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--primary-dark);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-dark);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.result-label {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.result-value {
+    color: var(--text-light);
+}
+
+.prediction-box {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    background-color: var(--success-light);
+    border-left: 4px solid var(--success);
+}
+
+.prediction-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2e7d32;
+}
+
+.warning-prediction {
+    background-color: var(--warning-light);
+    border-left-color: var(--warning);
+}
+
+.warning-prediction .prediction-text {
+    color: #e65100;
+}
+
+.heart-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--spacing-lg) auto;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(233, 30, 99, 0.1);
+    border-radius: 50%;
+}
+
+.heart-beat {
+    font-size: 48px;
+    color: var(--secondary);
+    animation: heartbeat 1.5s infinite;
+}
+
+footer {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid #e5e7eb;
+    color: var(--text-light);
+}
+
+/* Info box styling */
+.info-box {
+    display: flex;
+    background-color: rgba(30, 136, 229, 0.1);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin: var(--spacing-md) 0;
+}
+
+.info-icon {
+    font-size: 24px;
+    margin-right: var(--spacing-md);
+}
+
+.info-content p {
+    margin: 0;
+}
+
+.disclaimer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    padding: var(--spacing-md);
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: var(--border-radius);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+    }
+
+    .card {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Input field styles for better UX */
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+
+.icon-input {
+    padding-left: 40px !important;
+}
+
+/* Help tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: var(--spacing-sm);
+    color: var(--text-light);
+    cursor: help;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="heart-icon-container">
+                    <div class="heart-beat">❤</div>
+                </div>
+            </div>
+            <h1>Heart Disease Predictor</h1>
+            <p class="tagline">Early detection is key to heart disease prevention. Use our predictor tool to assess your risk factors.</p>
+        </header>
+
+        <div class="content">
+            <section class="form-section">
+                <div class="card">
+                    <h2 class="card-title">Enter Your Health Information</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="age">Age <span class="tooltip">ⓘ<span class="tooltiptext">Your current age in years</span></span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="age" name="age" class="icon-input" placeholder="Enter your age" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="chest_pressure">Chest Pressure <span class="tooltip">ⓘ<span class="tooltiptext">Rate your chest pressure from 1-10</span></span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">💓</span>
+                                <input type="text" id="chest_pressure" name="chest_pressure" class="icon-input" placeholder="Rate from 1-10" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lh">LH (Lipid Hormones) <span class="tooltip">ⓘ<span class="tooltiptext">Your LH level from recent blood work</span></span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🔬</span>
+                                <input type="text" id="lh" name="lh" class="icon-input" placeholder="Enter LH value" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn">Analyze My Heart Health</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="results-section">
+                {% if submitted_data %}
+                <div class="card">
+                    <h2 class="card-title">Your Health Information</h2>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Age:</span>
+                        <span class="result-value">{{ submitted_data.age }} years</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Chest Pressure:</span>
+                        <span class="result-value">{{ submitted_data.chest_pressure }} / 10</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">LH Level:</span>
+                        <span class="result-value">{{ submitted_data.lh }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if prediction_result %}
+                <div class="card">
+                    <h2 class="card-title">Analysis Results</h2>
+                    <div class="prediction-box {% if 'risk' in prediction_result|lower %}warning-prediction{% endif %}">
+                        <p class="prediction-text">{{ prediction_result }}</p>
+                    </div>
+                    <p class="disclaimer">
+                        Note: This prediction is based on the information you provided. For a complete assessment, please consult with a healthcare professional.
+                    </p>
+                </div>
+                {% endif %}
+
+                {% if not submitted_data and not prediction_result %}
+                <div class="card">
+                    <h2 class="card-title">Why Monitor Heart Health?</h2>
+                    <p>Heart disease remains one of the leading causes of death worldwide. Regular monitoring and early detection can significantly improve outcomes.</p>
+                    <div class="info-box">
+                        <div class="info-icon">ℹ️</div>
+                        <div class="info-content">
+                            <p>Our prediction tool uses machine learning algorithms trained on extensive clinical data to provide an initial assessment of your heart health risk factors.</p>
+                        </div>
+                    </div>
+                    <p>Fill out the form with your information to receive your personalized heart health analysis.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+
+        <footer>
+            <p>© 2025 Heart Health Predictor. This tool is for informational purposes only and should not replace professional medical advice.</p>
+        </footer>
+    </div>
+</body>
+</html>
